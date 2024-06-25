@@ -12,6 +12,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import RNPickerSelect from "react-native-picker-select";
+import { generateRequest } from "@/utils/generateRequest";
 const countryCodes = [
   { label: "+91", value: "+91" },
   { label: "+1", value: "+1" },
@@ -26,7 +27,7 @@ const Signup: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [countryCode, setCountryCode] = useState<string>("+91");
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!name.trim() || !phoneNumber.trim() || !dob) {
       Alert.alert("Error", "Please fill in all fields.");
       return;
@@ -37,7 +38,12 @@ const Signup: React.FC = () => {
       return;
     }
 
-    // Handle signup action
+    const response = await generateRequest({
+      uri: "/auth/create-user",
+      method: "POST",
+      body: { name, dob, countryCode, phoneNumber: Number(phoneNumber) },
+    });
+    console.log(response);
   };
 
   return (
